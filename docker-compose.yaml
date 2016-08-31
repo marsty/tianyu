@@ -1,0 +1,20 @@
+primary:
+  hostname: primary
+  image: mongo:2.7.8
+  volumes:
+    - /data/mongodbtest/replset/rs1:/data/db
+  command: mongod --dbpath /data/db --replSet myset --smallfiles
+rs2:
+  image: mongo:2.7.8
+  volumes:
+    - /data/mongodbtest/replset/rs2:/data/db
+  command: mongod --dbpath /data/db --port 22117 --replSet myset --smallfiles
+  links:
+    - primary
+rs3:
+  image: mongo:2.7.8
+  volumes:
+    - /data/mongodbtest/replset/rs3:/data/db
+  command: mongod --dbpath /data/db --port 23117 --replSet myset  --smallfiles
+  links:
+    - primary
