@@ -1,0 +1,32 @@
+config:
+  image: mongo:2.7.8
+  volumes:
+    - /data/mongodbtest/config:/data/db
+  command: mongod --configsvr --dbpath /data/db --oplogSize 128
+  expose:
+    - "27019"
+mongos:
+  image: mongo:2.7.8
+  command: mongos --port 27018 --configdb config:27019
+  links:
+    - config
+  expose:
+    - "27018"
+primary:
+  hostname: primary
+  image: mongo:2.7.8
+  volumes:
+    - /data/mongodbtest/primary:/data/db
+  command: mongod --dbpath /data/db --shardsvr --replSet shard --nojournal --port 21117 --smallfiles  --oplogSize 64
+  expose:
+    - "28017"
+  ports:
+    - "28017:28017"
+secondary:
+  image: mongo:2.7.8
+  volumes:
+    - /data/mongodbtest/secondary:/data/db
+  command: mongod --dbpath /data/db --shardsvr --replSet shard --nojournal --port 22117 --smallfiles  --oplogSize 64
+arbiter:
+  image: mongo:2.7.8
+  command: mongod --dbpath /data/db --shardsvr --replSet shard --port 23117 --smallfiles --oplogSize 128
