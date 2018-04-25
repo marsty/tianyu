@@ -1,2 +1,2 @@
 # tianyu
-wo shi tiancai!
+day day up!!
